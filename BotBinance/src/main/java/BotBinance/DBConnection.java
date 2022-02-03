@@ -4,7 +4,19 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-
+/**
+ * Create Database connection
+ * 
+ * 
+ * 
+ * 
+ * 
+ * @return
+ * @throws SQLException
+ * @throws InstantiationException
+ * @throws IllegalAccessException
+ * @throws ClassNotFoundException
+ */
 public static Connection CreateConnection() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException {
 	String driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 	try {

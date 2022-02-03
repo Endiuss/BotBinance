@@ -1,5 +1,7 @@
 package BotBinance;
 
+import static org.asynchttpclient.Dsl.asyncHttpClient;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,12 +16,20 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimeZone;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.binary.StringUtils;
+import org.asynchttpclient.AsyncHttpClient;
+import org.asynchttpclient.ListenableFuture;
+import org.asynchttpclient.Response;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BinanceDataRequest {
@@ -27,13 +37,15 @@ public class BinanceDataRequest {
 public static void GetCoinData(CryptoCoin c) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
 	Connection conn=DBConnection.CreateConnection();
    Statement stmt= conn.createStatement();
-   String Pair=c.Name;
+   String Pair=c.getName().replaceAll("[^A-Za-z]","");
+   
+  
    String LastCandel="IF (EXISTS (SELECT *"
    		+ "   FROM INFORMATION_SCHEMA.TABLES"
    		+ "   WHERE TABLE_SCHEMA = 'dbo'"
    		+ "   AND TABLE_NAME = '"+Pair+"'))"
    		+ "   BEGIN"
-   		+ "      SELECT MAX(closeTime) AS 'closeTime' FROM "+Pair+""
+   		+ "      SELECT MAX(closeTime) AS 'closeTime' FROM ["+Pair+"]"
    		+ "   END;"
    		+ "ELSE"
    		+ "   BEGIN"
@@ -50,9 +62,11 @@ public static void GetCoinData(CryptoCoin c) throws IOException, InstantiationEx
    		+ "   END;";
    long lstime=-1;
   System.out.println(LastCandel);
+  
  try {
   ResultSet dbResponse= stmt.executeQuery(LastCandel);
   ResultSetMetaData resultSetMetaData = dbResponse.getMetaData();
+  
  if(dbResponse != null) {
 	  while (dbResponse.next()) {
 		  lstime = dbResponse.getLong("closeTime");
@@ -60,15 +74,25 @@ public static void GetCoinData(CryptoCoin c) throws IOException, InstantiationEx
 		  }
 	 }}}
  catch(Exception e){System.out.println(e);}
- long startTimeRequest=BotBinance.startTime;
- 
- if(lstime<BotBinance.startTime) {String delsql="DELETE FROM "+Pair+";";
+
+	Calendar curentTime = Calendar.getInstance();
+	curentTime.setTimeInMillis(System.currentTimeMillis());
+Calendar resetTime = Calendar.getInstance();
+TimeZone tz = TimeZone.getTimeZone("UTC");
+resetTime.set(curentTime.getTime().getYear()+1900, curentTime.getTime().getMonth(), curentTime.getTime().getDate(), 16, 0,0);
+
+
+
+if(curentTime.before(resetTime)) {resetTime.add(Calendar.DAY_OF_MONTH, -1);}
+long startTimeRequest=resetTime.getTimeInMillis();
+
+
+ if(lstime<startTimeRequest) {String delsql="DELETE FROM "+Pair+";";
  stmt.execute(delsql);
  }
  else {startTimeRequest=lstime;}
  System.out.println("LAST TIME: "+startTimeRequest);
- long maxLimit= ((System.currentTimeMillis()-startTimeRequest)/60000)+50;
-	  System.out.println((System.currentTimeMillis()-startTimeRequest)/60000);
+long maxlimit=((curentTime.getTimeInMillis() - resetTime.getTimeInMillis())/60000)+10;
  // System.out.println( stmt.executeQuery(LastCandel));
   // double open, double high, double low, double close, double volume,double hLC3 ,long openTime,long closeTime
 	
@@ -77,10 +101,10 @@ public static void GetCoinData(CryptoCoin c) throws IOException, InstantiationEx
 	String stringStartTime=String.valueOf(startTimeRequest);
 	
 	System.out.println(stringStartTime);
-	parameters.put("symbol", Pair.toUpperCase());
+	parameters.put("symbol", c.getName().toUpperCase());
 	parameters.put("interval", "1m");
 	parameters.put("startTime", stringStartTime);
-	parameters.put("limit","1440");//String.valueOf(maxLimit)
+	parameters.put("limit",String.valueOf(maxlimit));//String.valueOf(maxLimit)
 	/*String rawString =BotBinance.SecretKey;
 	byte[] encodeKey = StringUtils.getBytesUtf8(rawString);
 	 String param="?";
@@ -182,4 +206,136 @@ conn.close();
 	
 	
 }
+
+public static void AccInfoInit(){
+	System.out.println("AccInfoInit");
+	try {String param="timestamp="+String.valueOf(System.currentTimeMillis());
+		
+		byte[] encodeKey = BotBinance.SecretKey.getBytes();
+		String querry_string = URLEncoder.encode(param,"UTF-8");
+		
+		 System.out.println(querry_string.toString());
+		
+		 byte[] encodeParam=param.getBytes("UTF-8");
+		
+		 String sig=Hex.encodeHexString(HMAC.calcHmacSha256(encodeKey,encodeParam));
+
+		String url="https://fapi.binance.com/fapi/v2/account?"+param+"&signature="+sig;
+		AsyncHttpClient asyncHttpClient = asyncHttpClient();
+
+		ListenableFuture<Response> whenResponse = asyncHttpClient.prepareGet(url).addHeader("X-MBX-APIKEY", BotBinance.ApiKey).execute();
+
+		JSONObject response = new JSONObject(whenResponse.get().getResponseBody());
+		//System.out.println(response);
+		BotBinance.AccBal= response.getDouble("totalWalletBalance");
+		JSONArray positions = response.getJSONArray("positions");
+		for(int i=0; i<positions.length();i++) {
+			JSONObject pair= positions.getJSONObject(i);
+			if(BotBinance.allCrypto.containsKey(pair.getString("symbol"))) {
+				CryptoCoin c = BotBinance.allCrypto.get(pair.getString("symbol"));
+				if(pair.getInt("leverage")!=c.getLeverage()) {
+					try {
+						OrderGenerator.ChangeLeverage(pair.getString("symbol"), c.getLeverage());
+					} catch (JSONException | BinanceException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					}
+				if(pair.getDouble("positionAmt")!=0) {if(pair.getDouble("positionAmt")>0) {
+						c.setIsInTrade(true);
+						
+						c.setActiveSide("LONG");
+						c.setProfitPrice(pair.getDouble("entryPrice"));
+						c.setActiveBalQty(Math.abs(pair.getDouble("positionAmt")*pair.getDouble("entryPrice")));
+						c.splitPozSize();
+						BotBinance.pairsInTrade.put(c.getName(), c);
+					
+				}
+				else{c.setIsInTrade(true);
+				c.setActiveSide("SHORT");
+				c.setProfitPrice(pair.getDouble("entryPrice"));
+				c.setActiveBalQty(Math.abs(pair.getDouble("positionAmt")*pair.getDouble("entryPrice")));
+				c.splitPozSize();
+				BotBinance.pairsInTrade.put(c.getName(), c);
+			}}
+			
+			}
+			
+		}
+	} catch (UnsupportedEncodingException | InterruptedException | ExecutionException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	
 }
+
+public static JSONArray GetPrecision() throws JSONException, InterruptedException, ExecutionException {
+
+JSONArray info=new JSONArray();
+
+String url="https://fapi.binance.com/fapi/v1/exchangeInfo";
+AsyncHttpClient asyncHttpClient = asyncHttpClient();
+
+ListenableFuture<Response> whenResponse = asyncHttpClient.prepareGet(url).execute();
+
+JSONObject response = new JSONObject(whenResponse.get().getResponseBody());
+info=response.getJSONArray("symbols");
+return info;
+
+}
+
+
+public static void setLastTradedPrice(CryptoCoin c) throws BinanceException {
+	
+	String time=String.valueOf(System.currentTimeMillis());	
+	String param="symbol="+c.getName()+"&timestamp="+time;
+	byte[] encodeKey = BotBinance.SecretKey.getBytes();
+	try {
+		String querry_string = URLEncoder.encode(param,"UTF-8");
+		
+		 System.out.println(querry_string.toString());
+		
+		 byte[] encodeParam=param.getBytes("UTF-8");
+		 System.out.println(encodeParam.length);
+		 String sig=Hex.encodeHexString(HMAC.calcHmacSha256(encodeKey,encodeParam));
+
+		String url="https://fapi.binance.com/fapi/v1/userTrades?"+param+"&signature="+sig;
+		
+		AsyncHttpClient asyncHttpClient = asyncHttpClient();
+		
+		ListenableFuture<Response> whenResponse = asyncHttpClient.prepareGet(url).addHeader("X-MBX-APIKEY", BotBinance.ApiKey).execute();
+
+	
+	
+
+
+		System.out.println("ok "+whenResponse.get().getStatusCode());
+		System.out.println("ok "+whenResponse.get().getResponseBody().toString());
+if(whenResponse.get().getStatusCode()==200) {
+		JSONArray TradeList=new JSONArray(whenResponse.get().getResponseBody());
+				for(int i=TradeList.length()-1;i>=0;i--) {
+			JSONObject trade=TradeList.getJSONObject(i);
+			
+			System.out.println(trade.getLong("time"));
+			if(c.getActiveSide().equals("SHORT")) {if(trade.getString("side").equals("SELL")) {
+				c.setLastOrderPrice(trade.getDouble("price"));
+				return;
+																														}
+			}
+			else {if(trade.getString("side").equals("BUY")) {c.setLastOrderPrice(trade.getDouble("price"));
+			return;}
+			}
+		}
+		c.setLastOrderPrice(c.getProfitPrice());
+		}
+
+		else {
+		        System.out.println(whenResponse.get().getResponseBody().toString());
+		        throw new BinanceException(whenResponse.get().getResponseBody().toString());}
+		} catch (IOException | InterruptedException | ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+}}

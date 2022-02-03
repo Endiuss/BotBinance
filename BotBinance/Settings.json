@@ -1,0 +1,410 @@
+{
+  "MaxActivePairs": 5,
+  "ApiKey":"ecdyk5YRfnFIfdgR9Px5wW2lLTK6ztEIJPYt1qDoREZZHLaF2UjhHgWkCshRv3uP",
+  "SecretKey":"lqPOxrhGoCGdlH50u70XT5klnx4ENzpUq428DKRTItkievXsHdbBSiuIW0S3Y0Ic",
+  "pairs": [
+    {
+      "SellTradingZones": [
+        {
+          "orderZoneQty": 7,
+          "left": 0,
+          "right": 5,
+          "maxZoneQty": 5
+        },
+        {
+            "orderZoneQty": 7,
+            "left": 5,
+            "right": 10,
+            "maxZoneQty": 5
+          },
+        {
+              "orderZoneQty": 7,
+              "left": 10,
+              "right": 15,
+              "maxZoneQty": 5
+            },
+        {
+                "orderZoneQty": 7,
+                "left": 15,
+                "right": 20,
+                "maxZoneQty": 5
+              },
+        {
+                  "orderZoneQty": 7,
+                  "left": 20,
+                  "right": 25,
+                  "maxZoneQty": 5
+                },
+        {
+                    "orderZoneQty": 7,
+                    "left": 25,
+                    "right": 30,
+                    "maxZoneQty": 5
+                  },
+        {
+                      "orderZoneQty": 7,
+                      "left": 30,
+                      "right": 35,
+                      "maxZoneQty": 5
+                    },
+        {
+                        "orderZoneQty": 7,
+                        "left": 35,
+                        "right": 40,
+                        "maxZoneQty": 5
+                      },
+        {
+                          "orderZoneQty": 7,
+                          "left": 40,
+                          "right": 45,
+                          "maxZoneQty": 5
+                        },
+        {
+                            "orderZoneQty": 7,
+                            "left": 45,
+                            "right": 50,
+                            "maxZoneQty": 5
+                          }
+              
+      ],
+      "perProfitTarget": 0.5,
+      "minLiqValue": 1,
+      "maxBalQty": 95,
+      "lev": 1,
+      "pair": "SFPUSDT",
+      "perMode": true,
+      "BuyTradingZones": [
+         {
+          "orderZoneQty": 7,
+          "left": 0,
+          "right": 5,
+          "maxZoneQty": 7
+        },
+        {
+            "orderZoneQty": 7,
+            "left": 5,
+            "right": 10,
+            "maxZoneQty": 7
+          },
+        {
+              "orderZoneQty": 7,
+              "left": 10,
+              "right": 15,
+              "maxZoneQty": 7
+            },
+        {
+                "orderZoneQty": 7,
+                "left": 15,
+                "right": 20,
+                "maxZoneQty": 7
+              },
+        {
+                  "orderZoneQty": 7,
+                  "left": 20,
+                  "right": 25,
+                  "maxZoneQty": 7
+                },
+        {
+                    "orderZoneQty": 7,
+                    "left": 25,
+                    "right": 30,
+                    "maxZoneQty": 7
+                  },
+        {
+                      "orderZoneQty": 7,
+                      "left": 30,
+                      "right": 35,
+                      "maxZoneQty": 7
+                    },
+        {
+                        "orderZoneQty": 7,
+                        "left": 35,
+                        "right": 40,
+                        "maxZoneQty": 7
+                      },
+        {
+                          "orderZoneQty": 7,
+                          "left": 40,
+                          "right": 45,
+                          "maxZoneQty": 7
+                        },
+        {
+                            "orderZoneQty": 7,
+                            "left": 45,
+                            "right": 50,
+                            "maxZoneQty": 7
+                          }
+      ]
+    },
+ {
+        "SellTradingZones": [
+          {
+            "orderZoneQty": 7,
+            "left": 0,
+            "right": 5,
+            "maxZoneQty": 7
+          },
+          {
+              "orderZoneQty": 7,
+              "left": 5,
+              "right": 10,
+              "maxZoneQty": 7
+            },
+          {
+                "orderZoneQty": 7,
+                "left": 10,
+                "right": 15,
+                "maxZoneQty": 7
+              },
+          {
+                  "orderZoneQty": 7,
+                  "left": 15,
+                  "right": 20,
+                  "maxZoneQty": 7
+                },
+          {
+                    "orderZoneQty": 7,
+                    "left": 20,
+                    "right": 25,
+                    "maxZoneQty": 7
+                  },
+          {
+                      "orderZoneQty": 7,
+                      "left": 25,
+                      "right": 30,
+                      "maxZoneQty": 7
+                    },
+          {
+                        "orderZoneQty": 7,
+                        "left": 30,
+                        "right": 35,
+                        "maxZoneQty": 7
+                      },
+          {
+                          "orderZoneQty": 7,
+                          "left": 35,
+                          "right": 40,
+                          "maxZoneQty": 7
+                        },
+          {
+                            "orderZoneQty": 7,
+                            "left": 40,
+                            "right": 45,
+                            "maxZoneQty": 7
+                          },
+          {
+                              "orderZoneQty": 7,
+                              "left": 45,
+                              "right": 50,
+                              "maxZoneQty": 7
+                            }
+                
+        ],
+        
+        "perProfitTarget": 0.5,
+        "minLiqValue": 1,
+        "maxBalQty": 95,
+        "lev": 1,
+        "pair": "XRPUSDT",
+        "perMode": true,
+        "BuyTradingZones": [
+           {
+            "orderZoneQty": 7,
+            "left": 0,
+            "right": 5,
+            "maxZoneQty": 5
+          },
+          {
+              "orderZoneQty": 7,
+              "left": 5,
+              "right": 10,
+              "maxZoneQty": 5
+            },
+          {
+                "orderZoneQty": 7,
+                "left": 10,
+                "right": 15,
+                "maxZoneQty": 5
+              },
+          {
+                  "orderZoneQty": 7,
+                  "left": 15,
+                  "right": 20,
+                  "maxZoneQty": 5
+                },
+          {
+                    "orderZoneQty": 7,
+                    "left": 20,
+                    "right": 25,
+                    "maxZoneQty": 5
+                  },
+          {
+                      "orderZoneQty": 7,
+                      "left": 25,
+                      "right": 30,
+                      "maxZoneQty": 5
+                    },
+          {
+                        "orderZoneQty": 7,
+                        "left": 30,
+                        "right": 35,
+                        "maxZoneQty": 5
+                      },
+          {
+                          "orderZoneQty": 7,
+                          "left": 35,
+                          "right": 40,
+                          "maxZoneQty": 5
+                        },
+          {
+                            "orderZoneQty": 7,
+                            "left": 40,
+                            "right": 45,
+                            "maxZoneQty": 5
+                          },
+          {
+                              "orderZoneQty": 7,
+                              "left": 45,
+                              "right": 50,
+                              "maxZoneQty": 5
+                            }
+        ]
+      },
+    {
+        "SellTradingZones": [
+          {
+            "orderZoneQty": 7,
+            "left": 0,
+            "right": 5,
+            "maxZoneQty": 7
+          },
+          {
+              "orderZoneQty": 7,
+              "left": 5,
+              "right": 10,
+              "maxZoneQty": 7
+            },
+          {
+                "orderZoneQty": 7,
+                "left": 10,
+                "right": 15,
+                "maxZoneQty": 7
+              },
+          {
+                  "orderZoneQty": 7,
+                  "left": 15,
+                  "right": 20,
+                  "maxZoneQty": 7
+                },
+          {
+                    "orderZoneQty": 7,
+                    "left": 20,
+                    "right": 25,
+                    "maxZoneQty": 7
+                  },
+          {
+                      "orderZoneQty": 7,
+                      "left": 25,
+                      "right": 30,
+                      "maxZoneQty": 7
+                    },
+          {
+                        "orderZoneQty": 7,
+                        "left": 30,
+                        "right": 35,
+                        "maxZoneQty": 7
+                      },
+          {
+                          "orderZoneQty": 7,
+                          "left": 35,
+                          "right": 40,
+                          "maxZoneQty": 7
+                        },
+          {
+                            "orderZoneQty": 7,
+                            "left": 40,
+                            "right": 45,
+                            "maxZoneQty": 7
+                          },
+          {
+                              "orderZoneQty": 7,
+                              "left": 45,
+                              "right": 50,
+                              "maxZoneQty": 7
+                            }
+                
+        ],
+        "perProfitTarget": 0.5,
+        "minLiqValue": 1,
+        "maxBalQty": 95,
+        "lev": 1,
+        "pair": "1000SHIBUSDT",
+        "perMode": true,
+        "BuyTradingZones": [
+           {
+            "orderZoneQty": 7,
+            "left": 0,
+            "right": 5,
+            "maxZoneQty": 5
+          },
+          {
+              "orderZoneQty": 7,
+              "left": 5,
+              "right": 10,
+              "maxZoneQty": 5
+            },
+          {
+                "orderZoneQty": 7,
+                "left": 10,
+                "right": 15,
+                "maxZoneQty": 5
+              },
+          {
+                  "orderZoneQty": 7,
+                  "left": 15,
+                  "right": 20,
+                  "maxZoneQty": 5
+                },
+          {
+                    "orderZoneQty": 7,
+                    "left": 20,
+                    "right": 25,
+                    "maxZoneQty": 5
+                  },
+          {
+                      "orderZoneQty": 7,
+                      "left": 25,
+                      "right": 30,
+                      "maxZoneQty": 5
+                    },
+          {
+                        "orderZoneQty": 7,
+                        "left": 30,
+                        "right": 35,
+                        "maxZoneQty": 5
+                      },
+          {
+                          "orderZoneQty": 7,
+                          "left": 35,
+                          "right": 40,
+                          "maxZoneQty": 5
+                        },
+          {
+                            "orderZoneQty": 7,
+                            "left": 40,
+                            "right": 45,
+                            "maxZoneQty": 5
+                          },
+          {
+                              "orderZoneQty": 7,
+                              "left": 45,
+                              "right": 50,
+                              "maxZoneQty": 5
+                            }
+        ]
+      }
+    
+    
+    
+  ]
+}

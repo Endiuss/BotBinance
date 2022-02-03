@@ -21,7 +21,13 @@ public class UpdatersGenerator {
 
 	public CompletableFuture<Void>  generateCryptoUpdater(CryptoCoin c){
 		CompletableFuture<Void> updater=CompletableFuture.runAsync(()-> {
+			
+			/**
+			 * Updates the 1 minute date on Database
+			 * 
+			 */
 			while(true) {
+				
 				try {
 					
 					Thread.sleep(60000);
@@ -34,11 +40,14 @@ public class UpdatersGenerator {
 				
 				
 			Map<String, String> parameters = new HashMap<String,String>();
-			parameters.put("symbol", (c.Name).toUpperCase());
+			parameters.put("symbol", c.getName().toUpperCase());
 			parameters.put("interval", "1m");
-			parameters.put("startTime", String.valueOf(c.LastCandelCloseTime));
+			parameters.put("startTime", String.valueOf(c.getLastCandelCloseTime()));
 			parameters.put("limit","99");
-			try {String url="https://fapi.binance.com/fapi/v1/klines"+"?"+ParameterStringBuilder.getParamsString(parameters);
+			try {
+				
+				
+				String url="https://fapi.binance.com/fapi/v1/klines"+"?"+ParameterStringBuilder.getParamsString(parameters);
 			AsyncHttpClient asyncHttpClient = asyncHttpClient();
 
 			ListenableFuture<Response> whenResponse = asyncHttpClient.prepareGet(url).addHeader("X-MBX-APIKEY", BotBinance.ApiKey).execute();
@@ -61,7 +70,9 @@ public class UpdatersGenerator {
 			System.out.println(js.toString());
 			Connection conn=DBConnection.CreateConnection();
 			Statement stmt = conn.createStatement();
-			String InsertQuery="INSERT INTO "+c.Name+" ([open], [high], [low], [close], [volume], [hlc3], [openTime], [closeTime]) "
+			String DbPair=c.getName();
+			DbPair.replaceAll("[^A-Za-z]","");
+			String InsertQuery="INSERT INTO "+DbPair+" ([open], [high], [low], [close], [volume], [hlc3], [openTime], [closeTime]) "
                     + "VALUES ";
 
 			JSONArray jarr=js.getJSONArray("candels");
@@ -96,7 +107,7 @@ public class UpdatersGenerator {
 			        	  InsertQuery+=";";
 			        	  //System.out.println(InsertQuery);
 			        	  stmt.execute(InsertQuery);
-			        	   InsertQuery="INSERT INTO "+c.Name+" ([open], [high], [low], [close], [volume], [hlc3], [openTime], [closeTime]) "
+			        	   InsertQuery="INSERT INTO "+DbPair+" ([open], [high], [low], [close], [volume], [hlc3], [openTime], [closeTime]) "
 			                      + "VALUES ";
 			nrOfDatas=0;
 			
